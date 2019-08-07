@@ -1,2 +1,11 @@
 # Design-Patterns
-Design Patterns
+自学设计模式
+
+## 闭包
+
+### 命令模式
+- 
+
+## 高阶函数
+
+## 单例模式
