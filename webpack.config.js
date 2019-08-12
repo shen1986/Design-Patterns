@@ -18,7 +18,7 @@ module.exports = {
     },
     mode: 'production', // 默认有两种模式 production（生产） development（开发） 设置模式以后运行命令将不会报错
     // 入口指定
-    entry: './Strategic/index3.js',
+    entry: './Strategic/index4.js',
     devtool: 'source-map',
     // 出口指定
     output: {
@@ -29,7 +29,7 @@ module.exports = {
     },
     plugins:[ // 数组 放着所有的webpack插件
         new HtmlWebpackPlugin({
-            template: './public/index.html', // 指定模板文件所在的位置
+            template: './public/index-tablecheck.html', // 指定模板文件所在的位置
             filename: 'index.html', // 打包后文件的名字
             minify: {               // 配置Html压缩
                removeAttributeQuotes: true, // 删除html中的双引号
