@@ -18,7 +18,7 @@ module.exports = {
     },
     mode: 'production', // 默认有两种模式 production（生产） development（开发） 设置模式以后运行命令将不会报错
     // 入口指定
-    entry: './Strategic/index4.js',
+    entry: './Publish-Subscribe/index.js',
     devtool: 'source-map',
     // 出口指定
     output: {
