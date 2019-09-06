@@ -13,6 +13,7 @@ module.exports = {
         collapsable: false,
         children: [
           ['chapter1/', 'Introduction'],
+          ['chapter1/', 'JavaScript'],
         ]
       },
     //   {
