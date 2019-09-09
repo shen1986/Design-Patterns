@@ -9,11 +9,11 @@ module.exports = {
     nav: [],
     sidebar: [
       {
-        title: '面向对象的JavaScript',
+        title: '基础知识',
         collapsable: false,
         children: [
           ['chapter1/', 'Introduction'],
-          ['chapter1/', 'JavaScript'],
+          'chapter1/JavaScript',
         ]
       },
     //   {
