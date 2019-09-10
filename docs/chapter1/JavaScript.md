@@ -194,3 +194,19 @@ Object.create = Object.create || function( obj ) {
     console.log( Object.getPrototypeOf( a ) === Person.prototype );  // 输出： true
     ```
 
+- 对象会记住它的原型
+    ```javaScript
+    var a = new Object();
+    console.log( a.__proto__ === Object.prototype ); // 输出true
+    ```
+
+- 如果对象无法响应某个请求，它会把这个请求委托给它自己的原型。
+    ```javaScript
+    var obj = { name: 'sven' }
+    
+    var A = function(){};
+    A.prototype = obj;
+
+    var a = new A();
+    console.log( a.name ); // 输出： sven
+    ```

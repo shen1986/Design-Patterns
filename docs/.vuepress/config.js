@@ -14,6 +14,7 @@ module.exports = {
         children: [
           ['chapter1/', 'Introduction'],
           'chapter1/JavaScript',
+          'chapter1/thisCallAndApply'
         ]
       },
     //   {
