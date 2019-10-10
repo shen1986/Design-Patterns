@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server",
+    "dev": "node examples/server.js",
     "start": "webpack --mode=development",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
@@ -27,6 +27,7 @@
     "webpack-dev-server": "^3.7.2"
   },
   "devDependencies": {
-    "vuepress": "^1.0.3"
+    "vuepress": "^1.0.3",
+    "webpack-hot-middleware": "^2.25.0"
   }
 }
