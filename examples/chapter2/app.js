@@ -9,4 +9,6 @@
 // JavaScript中的单例模式
 // require('./Singleton5');
 // 惰性单例（需要时候才去创建）
-require('./Singleton6');
+// require('./Singleton6');
+// 通用的惰性单例
+// require('./Singleton7');
