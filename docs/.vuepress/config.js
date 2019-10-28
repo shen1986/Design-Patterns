@@ -22,7 +22,8 @@ module.exports = {
         title: '设计模式',
         collapsable: false,
         children: [
-          'chapter2/Singleton'
+          'chapter2/Singleton',
+          'chapter2/Strategy'
         ]
       },
     //   {

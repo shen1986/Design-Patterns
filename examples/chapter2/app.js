@@ -12,3 +12,8 @@
 // require('./Singleton6');
 // 通用的惰性单例
 // require('./Singleton7');
+
+// 奖金的最初实现
+// require('./Strategy1');
+// 组合函数重构代码
+require('./Strategy2');
