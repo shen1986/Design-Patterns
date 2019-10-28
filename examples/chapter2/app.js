@@ -16,4 +16,6 @@
 // 奖金的最初实现
 // require('./Strategy1');
 // 组合函数重构代码
-require('./Strategy2');
+// require('./Strategy2');
+// 策略模式重构代码
+require('./Strategy3');
