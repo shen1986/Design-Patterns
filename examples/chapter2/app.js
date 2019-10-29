@@ -18,4 +18,6 @@
 // 组合函数重构代码
 // require('./Strategy2');
 // 策略模式重构代码
-require('./Strategy3');
+// require('./Strategy3');
+// javaScript 中的策略模式
+require('./Strategy4');
