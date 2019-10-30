@@ -163,4 +163,135 @@ console.log( calculateBonus( 'A', 10000 ) );
     + 小球运动持续的时间。
 
 ### 让小球动起来
-- 首先先要做出各种缓动算法
+- 首先先要做出各种缓动算法(封装算法)
+```javaScript
+var tween = {
+    linear: function(t, b, c, d) {
+        return c*t/d + b;
+    },
+    easeIn: function(t, b, c, d) {
+        return c * ( t /= d ) * t + b;
+    },
+    strongEaseIn: function(t, b, c, d) {
+        return c * ( t /= d ) * t * t * t * t + b;
+    },
+    strongEaseOut: function(t, b, c, d) {
+        return c * ( ( t = t / d - 1 ) * t * t * t * t + 1 ) + b;
+    },
+    sineaseIn: function(t, b, c, d) {
+        return c * ( t / d ) * t * t + b;
+    },
+    sineaseOut: function(t, b, c, d) {
+        return c * ( ( t = t / d -1 ) * t * t + 1 ) + b;
+    }
+}
+```
+- 在页面中放置一个DIV
+```html
+<div style="position:absolute; background:blue" id="div">我是div</div>
+```
+
+- 接下来定义Animate类
+```javaScript
+var Animate = function( dom ) {
+    this.dom = dom;             // 进行运动的dom节点
+    this.startTime = 0;         // 动画开始时间
+    this.startPos = 0;          // 动画开始时，dom节点的位置，即dom的初始位置
+    this.endPos = 0;            // 动画结束是，dom节点的位置，即dom的目标位置
+    this.propertyName = null;   // dom节点需要被改变的CSS属性名
+    this.easing = null;         // 缓动算法
+    this.duration = null;       // 动画持续时间
+}
+
+/**
+ * 启动这个动画
+ */
+Animate.prototype.start = function( propertyName, endPos, duration, easing ) {
+    this.startTime = +new Date; // 动画的启动时间
+    this.startPos = this.dom.getBoundingClientRect()[ propertyName ]; // dom节点初始位置
+    this.propertyName = propertyName; // dom节点需要被改变的CSS属性名
+    this.endPos = endPos; // dom节点的目标位置
+    this.duration = duration; // 动画的持续时间
+    this.easing = tween[ easing ]; // 缓动算法
+
+    var self = this;
+    var timeId = setInterval(function(){ // 启动定时器，开始执行动画
+        if (self.step() == false) {      // 如果动画已经结束，则清除定时器
+            clearInterval(timeId);
+        }
+    }, 19 );
+}
+
+/**
+ * 每一帧要做的事情
+ */
+Animate.prototype.step = function() {
+    var t = +new Date;      // 取得当前时间
+    // 如果当前时间大于动画开始时间加上动画持续时间之和，动画已经结束
+    if (t >= this.startTime + this.duration) {
+        this.update( this.endPos );     // 更新小球的CSS属性值
+        return false;
+    }
+    var pos = this.easing( t - this.startTime, this.startPos,
+        this.endPos - this.startPos, this.duration );
+    // pos为小球当前位置
+    this.update( pos );     // 更新小球的CSS属性值
+}
+
+/**
+ * 跟新小球的CSS
+ */
+Animate.prototype.update = function( pos ) {
+    this.dom.style[ this.propertyName ] = pos + 'px';
+};
+```
+
+## 更广义的“算法”
+- 策略模式不是只能封装算法，它还可以封装业务规则等等。
+
+## 表单验证
+- 用策略模式来做表单验证
+- 需求：写一个注册页面，在点击注册按钮之前，有如下几条校验逻辑。
+    + 用户名不能为空
+    + 密码长度不能少于6位
+    + 手机号码必须符合格式
+
+### 表单校验的第一个版本
+- html代码
+```html
+    <form action="http://xxx.com/register" id="registerForm" method="post">
+        请输入用户名：<input type="text" name="userName" />
+        请输入密码：<input type="text" name="password" />
+        请输入手机号码：<input type="text" name="phoneNumber" />
+        <button>提交</button>
+    </form>
+```
+
+- javaScript代码
+```javaScript
+var registerForm = document.getElementById( 'registerForm' );
+
+registerForm.onsubmit = function() {
+    if ( registerForm.userName.value === '' ) {
+        alert( '用户名不能为空' );
+        return false;
+    }
+
+    if ( registerForm.password.value.length < 6 ) {
+        alert( '密码长度不能少于6位' );
+        return false;
+    }
+
+    if ( !/(^1[3|5|8][0-9]{9}$)/.test( registerForm.phoneNumber.value ) ) {
+        alert( '手机号码格式不正确' );
+        return false;
+    }
+}
+```
+
+- 缺点
+    + onsubmit 函数比较庞大，包含了很多if - else 语句，这些语句覆盖所有的校验规则
+    + onsubmit 函数缺乏弹性 增加或修改校验规则，都必须深入到onsubmit函数中去，违反开放封闭原则
+    + 算法复用性差
+
+### 用策略模式重构表单校验

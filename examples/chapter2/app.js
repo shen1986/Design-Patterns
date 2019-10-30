@@ -20,4 +20,8 @@
 // 策略模式重构代码
 // require('./Strategy3');
 // javaScript 中的策略模式
-require('./Strategy4');
+// require('./Strategy4');
+// 让小球动起来
+// require('./Strategy5');
+// 表单校验的第一个版本
+require('./Strategy6');
