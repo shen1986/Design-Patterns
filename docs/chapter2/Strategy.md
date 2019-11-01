@@ -295,3 +295,88 @@ registerForm.onsubmit = function() {
     + 算法复用性差
 
 ### 用策略模式重构表单校验
+- 封装策略对象
+```javaScript
+var strategies = {
+    isNonEmpty: function( value, errorMsg ) { // 不为空
+        if ( value === '' ) {
+            return errorMsg;
+        }
+    },
+    minLength: function( value, length, errorMsg ) { // 限制最小长度
+        if ( value.length < length ) {
+            return errorMsg;
+        }
+    },
+    isMobile: function( value, errorMsg ) { // 手机号码格式
+        if ( !/(^1[3|5|8][0-9]{9}$)/.test( value ) ) {
+            return errorMsg;
+        }
+    }
+}
+```
+
+- 获取画面数据，并进行校验
+```javaScript
+var validataFunc = function(){
+    var validator = new Validator();
+
+    /** 添加一些校验规则 **/
+    validator.add( registerForm.userName, 'isNonEmpty', '用户名不能为空' );
+    validator.add( registerForm.password, 'minLength:6', '密码长度不能少于6位');
+    validator.add( registerForm.phoneNumber, 'isMobile', '手机号码格式不正确');
+
+    var errorMsg = validator.start(); // 获得校验结果
+    return errorMsg;
+}
+
+var registerForm = document.getElementById( 'registerForm' );
+registerForm.onsubmit = function(){
+    var errorMsg = validataFunc(); // 如果errorMsg有确切的返回值，说明未通过校验
+    if (errorMsg) {
+        alert( errorMsg );
+        return false; // 阻止表单提交
+    }
+};
+```
+- 代码说明
+    + registerForm.password是参与校验的input输入框
+    + 'minLength:6'： minLength是校验规则的名字，冒号后面代码校验规则用到的参数
+    + 第三个参数是返回的错误信息
+
+- Validator（校验类）的实现
+```javaScript
+var Validator = function(){
+    this.cache = []; // 保存校验规则
+}
+
+Validator.prototype.add = function( dom, rule, errorMsg ) {
+    var ary = rule.split(':'); // 把strategy和参数分开
+    console.log(ary);
+    this.cache.push(function(){ // 把校验的步骤用空函数包装起来，并且放入cache
+        var strategy = ary.shift(); // 用户挑选的strategy
+        ary.unshift( dom.value ); // 把input的value添加进参数列表
+        ary.push( errorMsg ); // 把errorMsg添加进参数列表
+        return strategies[ strategy ].apply( dom, ary );
+    });
+};
+
+Validator.prototype.start = function(){
+    for (let i = 0; i < this.cache.length; i++) {
+        const  validataFunc = this.cache[i];
+        var msg = validataFunc(); // 开始校验，并取得校验后的返回信息
+        if ( msg ) { // 如果有确切的返回值，说明校验没有通过
+            return msg;
+        }
+    }
+};
+```
+
+- 这样修改摸个校验规则的时候，只需要修改少量的代码
+- 比如用户名改成不能少于10位
+```javaScript
+// 追加
+validator.add( registerForm.userName, 'minLength:10', '用户名长度不能小于10')；
+```
+
+### 给某个文本输入框添加多种校验规则

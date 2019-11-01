@@ -24,4 +24,6 @@
 // 让小球动起来
 // require('./Strategy5');
 // 表单校验的第一个版本
-require('./Strategy6');
+// require('./Strategy6');
+// 策略模式重构表单校验
+require('./Strategy7');
