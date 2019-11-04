@@ -14,3 +14,5 @@
 [单例模式](docs/chapter2/Singleton.md)
 
 [策略模式](docs/chapter2/Strategy.md)
+
+[代理模式](docs/chapter2/Proxy.md)

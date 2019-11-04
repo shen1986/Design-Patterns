@@ -23,7 +23,8 @@ module.exports = {
         collapsable: false,
         children: [
           'chapter2/Singleton',
-          'chapter2/Strategy'
+          'chapter2/Strategy',
+          'chapter2/Proxy'
         ]
       },
     //   {

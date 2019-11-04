@@ -26,4 +26,6 @@
 // 表单校验的第一个版本
 // require('./Strategy6');
 // 策略模式重构表单校验
-require('./Strategy7');
+// require('./Strategy7');
+// 给表单添加多种校验规则
+require('./Strategy8');

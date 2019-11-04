@@ -380,3 +380,74 @@ validator.add( registerForm.userName, 'minLength:10', '用户名长度不能小�
 ```
 
 ### 给某个文本输入框添加多种校验规则
+- 上面的例子一个input控件只能对应一个校验规则。
+- 对Validator类稍做修改，让一个控件能够对应多种校验规则
+```javaScript
+/**Validator类 */
+var Validator = function(){
+    this.cache = []; // 保存校验规则
+}
+
+Validator.prototype.add = function( dom, rules ) {
+
+    var self = this;
+
+    for (let i = 0; i < rules.length; i++) {
+        const rule = rules[i];
+        (function( rule ) {
+            var strategyAry = rule.strategy.split(':');
+            var errorMsg = rule.errorMsg;
+
+            self.cache.push(function(){
+                var strategy = strategyAry.shift();
+                strategyAry.unshift( dom.value );
+                strategyAry.push( errorMsg );
+                return strategies[ strategy ].apply( dom, strategyAry );
+            })
+        })( rule );
+    }
+};
+
+Validator.prototype.start = function(){
+    for (let i = 0; i < this.cache.length; i++) {
+        const  validataFunc = this.cache[i];
+        var msg = validataFunc(); // 开始校验，并取得校验后的返回信息
+        if ( msg ) { // 如果有确切的返回值，说明校验没有通过
+            return msg;
+        }
+    }
+};
+```
+
+## 策略模式的优缺点
+- 优点
+    + 策略模式利用组合，委托和多态等技术和思想，可以有效地避免多重条件选择语句。
+    + 策略模式提供了对开放-封闭原则的完美支持，将算法封装在独立的strategy中，使得它们易于切换，易于理解，易于扩展。
+    + 策略模式中的算法也可以复用在系统的其他地方，从而避免许多重复的复制粘贴工作。
+    + 在策略模式中利用组合和委托来让Context拥有执行算法的能力，这也是集成的一种更轻便的替代方案。
+- 缺点
+    + 程序中多了很多策略对象
+    + 要使用策略模式必须了解所有的strategy，此时strategy要向客户暴露它的所有实现，这是违反最少知识原则的。
+
+## 一等函数对象与策略模式
+- 在JavaScript中，除了使用类来封装算法和行为之外，使用函数当然也是一种选择。
+- 这些函数可以作为参数，四处传播。
+```javaScript
+var S = function( salary ) {
+    return salary + 4;
+};
+
+var A = function( salary ) {
+    return salary + 3;
+};
+
+var B = function( salary ) {
+    return salary + 2;
+};
+
+var calculateBonus = function( func, salary ) {
+    return func( salary );
+};
+
+calculateBonus( S, 10000) // 输出：40000
+```
