@@ -66,7 +66,7 @@ console.log( calculateBonus( 'B', 20000 ) );
 console.log( calculateBonus( 'S', 6000 ) );
 ```
 
-这段代码改善了问题（绩效的算法能修改）但是还有一个根本问题没有解决，calculateBonus可能越来越庞大，系统变化是缺乏弹性。
+这段代码改善了问题（绩效的算法能修改，算法可以被重用）但是还有一个根本问题没有解决，calculateBonus可能越来越庞大，系统变化是缺乏弹性。
 
 3. 使用策略模式重构代码
 ```javaScript
