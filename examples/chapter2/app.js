@@ -28,4 +28,10 @@
 // 策略模式重构表单校验
 // require('./Strategy7');
 // 给表单添加多种校验规则
-require('./Strategy8');
+// require('./Strategy8');
+// 小明送花
+// require('./Proxy1');
+// 小明通过B给A送花
+// require('./Proxy2');
+// 小明通过B给A送花，B监听A的心情，心情好的时候送花
+require('./Proxy3');
