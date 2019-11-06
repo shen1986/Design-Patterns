@@ -23,6 +23,20 @@ module.exports = {
     return entries
   }, {}),
 
+  // 解析图片
+  module:{
+    rules: [
+        {
+          test: /\.(png|jpg|gif)$/, // 用来解析图片
+          use: {
+            loader: 'url-loader',
+            // options: {
+            //     limit: 1 // 200k大小限制
+            // }
+          }
+      },
+    ]
+  },
   /**
    * 根据不同的目录名称，打包生成目标 js，名称和目录名一致
    */

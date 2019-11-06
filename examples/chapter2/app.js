@@ -34,4 +34,8 @@
 // 小明通过B给A送花
 // require('./Proxy2');
 // 小明通过B给A送花，B监听A的心情，心情好的时候送花
-require('./Proxy3');
+// require('./Proxy3');
+// 无虚拟代理图片1
+// require('./Proxy4');
+// 虚拟代理图片
+require('./Proxy5');
