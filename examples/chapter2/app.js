@@ -38,4 +38,10 @@
 // 无虚拟代理图片1
 // require('./Proxy4');
 // 虚拟代理图片
-require('./Proxy5');
+// require('./Proxy5');
+// 不用虚拟代理实现预加载
+// require('./Proxy6');
+// Check的HTTP请求
+// require('./Proxy7');
+// 虚拟代理合并HTTP请求
+require('./Proxy8');

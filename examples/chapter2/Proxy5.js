@@ -14,7 +14,7 @@ var myImage = (function(){
 var proxyImage = (function(){
     var img = new Image();
     img.onload = function(){
-        myImage.setSrc( this.src );
+        // myImage.setSrc( this.src );
     }
     return {
         setSrc: function( src ){

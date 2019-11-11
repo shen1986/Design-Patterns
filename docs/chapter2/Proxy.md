@@ -113,6 +113,86 @@ var B = {
 - 在javaScript不容易实现代码保护，我们更多的是使用虚拟代理。
 
 ## 虚拟代理实现图片预加载
+- 先来一段普通的代码,通过这段代码可以看到，在图片加载完成之前由于带宽的问题网页有一段时间是空白
+```javaScript
+var myImage = (function(){
+    var imgNode = document.createElement( 'img' );
+    document.body.appendChild( imgNode );
 
+    return {
+        setSrc: function( src ){
+            imgNode.src = src;
+        }
+    }
+})();
+
+myImage.setSrc( 'http://imgcache.qq.com/qzone/v6/portal/gy/upload/upfile_1034445_1495513359.jpg' );
+```
+
+- 通过代理来改善这个问题,在图片加载完之前，先显示一段请等待的信息。
+```javaScript
+import temp from './Images/bf1847b80c8aaa32b2ec70419ffdbc01.jpg';
+
+var myImage = (function(){
+    var imgNode = document.createElement( 'img' );
+    document.body.appendChild( imgNode );
+
+    return {
+        setSrc: function( src ){
+            imgNode.src = src;
+        }
+    }
+})();
+
+var proxyImage = (function(){
+    var img = new Image();
+    img.onload = function(){
+        // myImage.setSrc( this.src );
+    }
+    return {
+        setSrc: function( src ){
+            myImage.setSrc(temp);
+            img.src = src;
+        }
+    }
+})();
+
+proxyImage.setSrc( 'http://imgcache.qq.com/qzone/v6/portal/gy/upload/upfile_1034445_1495513359.jpg' );
+```
 
 ## 代理的意义
+- 不过就是实现一个小小的图片预加载能能，即使不用代理也可以实现。
+```javaScript
+import temp from './Images/bf1847b80c8aaa32b2ec70419ffdbc01.jpg';
+
+var MyImage = (function(){
+    var imgNode = document.createElement( 'img' );
+    document.body.appendChild( imgNode );
+    var img = new Image();
+
+    img.onload = function(){
+        // imgNode.src = img.src;
+    };
+
+    return {
+        setSrc: function( src ){
+            imgNode.src = temp;
+            img.src = src;
+        }
+    }
+})();
+
+MyImage.setSrc( 'http://imgcache.qq.com/qzone/v6/portal/gy/upload/upfile_1034445_1495513359.jpg' );
+```
+- 要说明代理的意义，要引入一个面向对象的设计原则--单一职责原则
+- 网上有很多说明。
+
+## 代理和本体接口的一致性
+- 代理一般是与本体的接口是一致的，有2个好处
+    + 用户可以放心地请求代理，他只关心是否能得到想要的结果
+    + 在任何使用本体的地方都可以替换成使用代理
+
+## 虚拟代理合并HTTP请求
+- 场景：
+    + 每周我们都要写一份工作周报，周报要交给总监批阅。总监手下管理着150个员工，如果我们每个人直接把周报发给总监，那总监把一周的时间都花在查看邮件上面。
+    + 现在我们把周报发给各自的组长，组长作为代理，把组内成员的周报合并提炼成一份后一次性地发给总监。这样一来，总监的邮箱清净多了。
