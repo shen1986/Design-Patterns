@@ -196,3 +196,84 @@ MyImage.setSrc( 'http://imgcache.qq.com/qzone/v6/portal/gy/upload/upfile_1034445
 - 场景：
     + 每周我们都要写一份工作周报，周报要交给总监批阅。总监手下管理着150个员工，如果我们每个人直接把周报发给总监，那总监把一周的时间都花在查看邮件上面。
     + 现在我们把周报发给各自的组长，组长作为代理，把组内成员的周报合并提炼成一份后一次性地发给总监。这样一来，总监的邮箱清净多了。
+
+- html用Checkbox模拟每个人发周报
+```javaScript
+    <input type="checkbox" id="1"/>1
+    <input type="checkbox" id="2"/>2
+    <input type="checkbox" id="3"/>3
+    <input type="checkbox" id="4"/>4
+    <input type="checkbox" id="5"/>5
+    <input type="checkbox" id="6"/>6
+    <input type="checkbox" id="7"/>7
+    <input type="checkbox" id="8"/>8
+    <input type="checkbox" id="9"/>9
+```
+
+- 不使用代理的情况
+```javaScript
+var synchronousFile = function( id ){
+    console.log( '开始同步文件，id为：' + id);
+};
+
+var checkbox = document.getElementsByTagName('input');
+
+for (let i = 0; i < checkbox.length; i++) {
+    const c = checkbox[i];
+    c.onclick = function(){
+        if (this.checked === true) {
+            synchronousFile( this.id );
+        }
+    }
+}
+```
+
+- 使用代理的情况
+```javaScript
+var synchronousFile = function( id ){
+    console.log( '开始同步文件，id为：' + id);
+};
+
+var proxySynchronousFile = (function(){
+    var cache = [], // 保存一段时间内需要同步的ID
+        timer; // 定时器
+    
+    return function( id ){
+        cache.push( id );
+        if ( timer ) { // 保证不会覆盖已经启动的定时器
+            return;
+        }
+
+        timer = setTimeout(function(){
+            synchronousFile( cache.join( ',' ) ); // 2秒后向本体发送需要同步的ID集合
+        }, 2000);
+    }
+})();
+
+var checkbox = document.getElementsByTagName('input');
+
+for (let i = 0; i < checkbox.length; i++) {
+    const c = checkbox[i];
+    c.onclick = function(){
+        if (this.checked === true) {
+            proxySynchronousFile( this.id );
+        }
+    }
+}
+```
+
+## 虚拟代理在惰性加载中的应用
+
+## 缓存代理
+### 计算乘积
+### 缓存代理用于ajax异步请求数据
+
+## 用高阶函数动态创建代理
+
+## 其他代理模式
+- 简单介绍下，不说明了
+    + 防火墙代理：控制网络资源的访问，保护主机不让“坏人”接近。
+    + 远程代理：为一个对象在不同的地址空间提供局部代表，在Java中，远程代理可以使另一个虚拟机中的对象。
+    + 保护代理：用于对象应该有不同访问权限的情况
+    + 智能引用代理：取代了简单的指针，它在访问对象执行一些附加操作，比如计算一个对象被引用的次数
+    + 写时复制代理：通常用于复制一个庞大对象的情况。写时复制代理延迟了复制的过程，当对象被真正修改时，才对它进行复制操作。写时复制代理是虚拟代理的一种变体，DLL（操作系统中的动态链接库）是其典型运用场景。
