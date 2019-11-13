@@ -44,4 +44,4 @@
 // Check的HTTP请求
 // require('./Proxy7');
 // 虚拟代理合并HTTP请求
-require('./Proxy8');
+// require('./Proxy8');
