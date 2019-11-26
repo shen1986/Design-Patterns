@@ -24,7 +24,9 @@ module.exports = {
         children: [
           'chapter2/Singleton',
           'chapter2/Strategy',
-          'chapter2/Proxy'
+          'chapter2/Proxy',
+          'chapter2/Iterator',
+          'chapter2/Observer'
         ]
       },
     //   {
