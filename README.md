@@ -16,3 +16,7 @@
 [策略模式](docs/chapter2/Strategy.md)
 
 [代理模式](docs/chapter2/Proxy.md)
+
+[迭代器模式](docs/chapter2/Iterator.md)
+
+[发布-订阅模式](docs/chapter2/Observer.md)
