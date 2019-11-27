@@ -15,5 +15,82 @@
 - 第二点说明发布订阅模式可以取代对象之间硬编码的通知机制。
 
 ## DOM事件
+- DOM节点上绑定时间就是用的发布订阅者模式。
 
 ## 自定义事件
+- 如何实现发布订阅者模式
+    + 首先要指定好谁充当发布者（不如售楼处）
+    + 然后给发布者添加一个缓存列表，用于存放回调函数以便通知订阅者（售楼处的花名册）
+    + 最后发布消息的时候，发布者会遍历这个缓存列表，依次触发里面存放的订阅者回调函数（遍历花名册，挨个发短信）
+
+- 先实现一个简单的
+```javaScript
+var  salesOffices = {}; // 定义售楼处
+
+salesOffices.clientList = [];  // 缓存列表，存放订阅者的回调函数
+
+salesOffices.listen = function ( fn ) { // 增加订阅者
+    this.clientList.push( fn );         // 订阅的消息添加进缓存列表
+};
+
+salesOffices.trigger = function(){ // 发布消息
+    for (let i = 0; i < this.clientList.length; i++) {
+        const fn = this.clientList[i];       // (2) // arguments 是发布消息时带上的参数
+        fn.apply( this, arguments );
+    }
+}
+
+salesOffices.listen( function( price, squareMeter ){ // 小明订阅消息
+    console.log( '价格= ' + price);
+    console.log( 'squareMeter= ' + squareMeter);
+});
+
+salesOffices.listen( function( price, squareMeter ){ // 小红订阅消息
+    console.log( '价格= ' + price );
+    console.log( 'squareMeter= ' + squareMeter );
+});
+
+salesOffices.trigger( 200000, 88);
+salesOffices.trigger( 300000, 110);
+```
+
+- 但是上面的例子有一个问题，小明只想买88平米的房子，但是发布者把110平米的信息也推送给了小明，这是一种困扰。所以增加一个Key稍微改下代码。
+```javaScript
+var  salesOffices = {}; // 定义售楼处
+
+salesOffices.clientList = [];  // 缓存列表，存放订阅者的回调函数
+
+salesOffices.listen = function ( key, fn ) { // 增加订阅者
+    if ( !this.clientList[ key ] ) {  // 如果还是没有订阅过此类消息，给该类消息创建一个缓存列表
+        this.clientList[ key ] = [];
+    }
+    this.clientList[ key ].push( fn );         // 订阅的消息添加进缓存列表
+};
+
+salesOffices.trigger = function(){ // 发布消息
+    var key = Array.prototype.shift.call( arguments ); // 取出消息类型
+    var fns = this.clientList[ key ]; // 取出该消息对应的回调函数
+
+    if ( !fns || fns.length === 0 ) { // 如果没有订阅该消息，则返回
+        return false;
+    }
+
+    for (let i = 0; i < fns.length; i++) {
+        const fn = fns[i];       // (2) // arguments 是发布消息时带上的参数
+        fn.apply( this, arguments );
+    }
+}
+
+salesOffices.listen( 'squareMeter88', function( price, squareMeter ){ // 小明订阅消息
+    console.log( '价格= ' + price);
+});
+
+salesOffices.listen( 'squareMeter110', function( price, squareMeter ){ // 小红订阅消息
+    console.log( '价格= ' + price );
+});
+
+salesOffices.trigger( 'squareMeter88', 200000);  // 发布88平方米房子的价格
+salesOffices.trigger( 'squareMeter110', 300000); // 发布110平方米房子的价格
+```
+
+## 发布-订阅模式的通用实现

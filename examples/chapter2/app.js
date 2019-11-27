@@ -45,3 +45,8 @@
 // require('./Proxy7');
 // 虚拟代理合并HTTP请求
 // require('./Proxy8');
+
+// 自定义发布订阅模式
+// require('./Observer1');
+// 自定义发布订阅模式的改善
+require('./Observer2');
