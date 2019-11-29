@@ -51,4 +51,6 @@
 // 自定义发布订阅模式的改善
 // require('./Observer2');
 // 发布订阅模式共通化
-require('./Observer3');
+// require('./Observer3');
+// 取消订阅模式
+require('./Observer4');
