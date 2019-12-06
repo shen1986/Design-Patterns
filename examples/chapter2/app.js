@@ -53,4 +53,6 @@
 // 发布订阅模式共通化
 // require('./Observer3');
 // 取消订阅模式
-require('./Observer4');
+// require('./Observer4');
+// 全局订阅模式
+require('./Observer5');

@@ -189,5 +189,69 @@ salesOffices.remove( 'squareMeter88', fn1 ); // 删除小明的订阅
 salesOffices.trigger( 'squareMeter88', 200000 );
 salesOffices.trigger( 'squareMeter100', 300000 );
 ```
+## 全局的发布-订阅对象
+- 刚刚的例子存在2个问题
+    + 我们给每个对象都添加了Listen和trigger方法，以及一个缓存列表clientList，这是一种资源浪费。
+    + 小明和售楼处对象还是存在一定的耦合性，至少要知道对象名字，才能顺利订阅到事件。
 
-## 真实的例子--网站登录
+- 有的时候我们可以定一个全局的订阅对象，程序所有的对象都可以订阅这个对象，减少了不必要的复杂度。
+
+```javaScript
+var Event = (function(){
+
+    var clientList = {},
+        listen,
+        trigger,
+        remove;
+    
+    listen = function( key, fn ){
+        if ( !clientList[ key ] ) {
+            clientList[ key ] = [];
+        }
+        clientList[ key ].push( fn );
+    };
+
+    trigger = function(){
+        var key = Array.prototype.shift.call( arguments ),
+            fns = clientList[ key ];
+            if ( !fns || fns.length === 0 ) {
+                return false;
+            }
+            for (let i = 0; i < fns.length; i++) {
+                const fn = fns[i];
+                fn.apply( this, arguments );
+            }
+    };
+
+    remove = function( key, fn ){
+        var fns = clientList[ key ];
+        if ( !fns ) {
+            return false;
+        }
+
+        if ( !fn ) {
+            fns && ( fns.length = 0 );
+        } else {
+            for (let l = fns.length - 1; l >= 0; l--) {
+                const _fn = fns[ l ];
+                if ( _fn === fn ) {
+                    fns.splice( l, 1 );
+                }
+            }
+        }
+    };
+
+    return {
+        listen: listen,
+        trigger: trigger,
+        remove: remove
+    }
+
+})();
+
+Event.listen( 'squareMeter88', function( price ) { // 小红订阅消息
+    console.log( `价格= ${price}`); // 输出： '价格= 2000000'
+});
+
+Event.trigger( 'squareMeter88', 2000000 );
+```
