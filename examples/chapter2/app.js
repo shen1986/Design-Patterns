@@ -55,4 +55,6 @@
 // 取消订阅模式
 // require('./Observer4');
 // 全局订阅模式
-require('./Observer5');
+// require('./Observer5');
+// 全局命名冲突解决
+require('./Observer6');
