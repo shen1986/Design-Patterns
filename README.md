@@ -20,3 +20,5 @@
 [迭代器模式](docs/chapter2/Iterator.md)
 
 [发布-订阅模式](docs/chapter2/Observer.md)
+
+[命令模式](docs/chapter2/Command.md)
