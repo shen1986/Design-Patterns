@@ -80,7 +80,6 @@ var delSubMenuCommand = new DelSubMenuCommand( SubMenu );
 setCommand( button1, refreshMenuBarCommand );
 setCommand( button2, addSubMenuCommand );
 setCommand( button3, delSubMenuCommand );
-
 ```
 
 ## JavaScript中的命令模式
