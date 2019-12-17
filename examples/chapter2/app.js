@@ -57,4 +57,7 @@
 // 全局订阅模式
 // require('./Observer5');
 // 全局命名冲突解决
-require('./Observer6');
+// require('./Observer6');
+
+// 命令模式的例子--菜单程序
+require('./Command1');

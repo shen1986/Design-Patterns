@@ -8,3 +8,79 @@
 - 除了这2点之外，命令模式还支持撤销，排队等操作。
 
 ## 命令模式的例子--菜单程序
+- 假设编写一个用户界面程序，界面上有数十个Button按钮，决定让某个程序员负责绘制按钮，而另外一个程序员负责编写按钮后的具体行为，这些行为封装在对象中。
+
+- 绘制：
+```javaScript
+    // html 画面
+    <button id="button1">点击按钮1</button>
+    <button id="button2">点击按钮2</button>
+    <button id="button3">点击按钮3</button>
+
+    // Script 处理
+    var button1 = document.getElementById( 'button1' );
+    var button2 = document.getElementById( 'button2' );
+    var button3 = document.getElementById( 'button3' );
+
+    // 负责绘制按钮的程序员不关心有什么命令，他只需要预留好安装命令的接口
+    var setCommand = function( button, command ){
+        button.onclick = function(){
+            console.log("command绑定",command)
+            command.execute();
+        }
+    };
+```
+
+- 负责编写具体行为
+- 程序员只需要知道`setCommand`方法，和button1~3对象，就可以处理事件了。
+```javaScript
+var MenuBar = {
+    refresh: function(){
+        console.log( '刷新菜单目录' );
+    }
+}
+
+var SubMenu = {
+    add: function(){
+        console.log( '增加子菜单' );
+    },
+    del: function(){
+        console.log( '删除子菜单' );
+    }
+};
+
+var RefreshMenuBarCommand = function( receiver ){
+    this.receiver = receiver;
+};
+
+RefreshMenuBarCommand.prototype.execute = function(){
+    this.receiver.refresh();
+};
+
+var AddSubMenuCommand = function( receiver ){
+    this.receiver = receiver;
+};
+
+AddSubMenuCommand.prototype.execute = function(){
+    this.receiver.add();
+};
+
+var DelSubMenuCommand = function( receiver ){
+    this.receiver = receiver;
+};
+
+DelSubMenuCommand.prototype.execute = function(){
+    this.receiver.del();
+}
+
+var refreshMenuBarCommand = new RefreshMenuBarCommand( MenuBar );
+var addSubMenuCommand = new AddSubMenuCommand( SubMenu );
+var delSubMenuCommand = new DelSubMenuCommand( SubMenu );
+
+setCommand( button1, refreshMenuBarCommand );
+setCommand( button2, addSubMenuCommand );
+setCommand( button3, delSubMenuCommand );
+
+```
+
+## JavaScript中的命令模式
