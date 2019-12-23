@@ -60,4 +60,6 @@
 // require('./Observer6');
 
 // 命令模式的例子--菜单程序
-require('./Command1');
+// require('./Command1');
+// JavaScript中的命令模式
+require('./Command2');
