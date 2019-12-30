@@ -62,4 +62,8 @@
 // 命令模式的例子--菜单程序
 // require('./Command1');
 // JavaScript中的命令模式
-require('./Command2');
+// require('./Command2');
+// 没有撤销命令
+// require('./Command3');
+// 有撤销命令
+require('./Command4');

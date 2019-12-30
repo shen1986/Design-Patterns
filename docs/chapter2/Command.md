@@ -115,3 +115,58 @@ bindClick( button3, SubMenu.del );
 ```
 
 ## 撤销命令
+- 命令模式能够轻松的完成撤销逻辑
+
+- 用小球移动做一个例子，从输入框入一个值，点击开始移动按钮，小球移动你输入的距离。
+- 通过命令模式，可以记录上次小球的坐标，点击cancel让小球回到上一次的位置。
+
+- html逻辑
+```html
+    <!-- Command3.js,Command4.js -->
+    <div id="ball" style="position:absolute;background:#000;width: 50px;height: 50px;"></div>
+    输入小球移动后的位置：<input id="pos"/>
+    <button id="moveBtn">开始移动</button>
+
+    <!-- Command4.js -->
+    <button id="cancelBtn">cancel</button>
+```
+
+- js逻辑
+```javaScript
+var ball = document.getElementById( 'ball' );
+var pos = document.getElementById( 'pos' );
+var moveBtn = document.getElementById( 'moveBtn' );
+var cancelBtn = document.getElementById( 'cancelBtn' );
+
+// ****** 命令模式 ***********
+var MoveCommand = function( receiver, pos ){
+    this.receiver = receiver;
+    this.pos = pos;
+    this.oldPos = null;
+}
+
+MoveCommand.prototype.execute = function(){
+    this.receiver.start( 'left', this.pos, 1000, 'strongEaseOut' );
+    this.oldPos = this.receiver.dom.getBoundingClientRect()[ this.receiver.propertyName ];
+    // 记录小球开始移动前的位置
+}
+
+MoveCommand.prototype.undo = function(){
+    this.receiver.start( 'left', this.oldPos, 1000, 'strongEaseOut' );
+    // 回到小球移动前记录的位置
+}
+
+var moveCommand;
+
+moveBtn.onclick = function(){
+    var animate = new Animate( ball );
+    moveCommand = new MoveCommand( animate, pos.value );
+    moveCommand.execute();
+};
+
+cancelBtn.onclick = function(){
+    moveCommand.undo();   // 撤销命令
+}
+```
+
+## 撤销和重做
