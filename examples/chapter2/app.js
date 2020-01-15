@@ -66,4 +66,8 @@
 // 没有撤销命令
 // require('./Command3');
 // 有撤销命令
-require('./Command4');
+// require('./Command4');
+// 撤销与重做
+// require('./Command5');
+// 宏命令
+require('./Command6')

@@ -170,3 +170,111 @@ cancelBtn.onclick = function(){
 ```
 
 ## 撤销和重做
+- 有的时候简单的撤销不一定行得通，不如Canvas上的动作很难撤销，我们需要的是把canvas的内容全部清除，把刚刚画的东西再画一遍
+- 模拟一个街头霸王的例子，通过播放录像把刚刚的操作再执行一遍
+- 画面代码
+```html
+<button id="replay">播放录像</button>
+```
+- js代码
+```javaScript
+var Ryu = {
+    attack: function(){
+        console.log("攻击");
+    },
+    defense: function(){
+        console.log("防御");
+    },
+    jump: function(){
+        console.log("跳跃");
+    },
+    crouch: function(){
+        console.log("蹲下");
+    }
+};
+
+var makeCommand = function( receiver, state ) { // 创建命令
+    return function(){
+        receiver[ state ]();
+    }
+}
+
+var commands = {
+    "119": "jump",  // w
+    "115": "crouch", // s
+    "97": "defense", // a
+    "100": "attack" // d
+}
+
+var commandStack = []; // 保存命令的堆栈
+
+document.onkeypress = function( ev ){
+    var keyCode = ev.keyCode,
+        command = makeCommand( Ryu, commands[ keyCode ] );
+    
+    if (command) {
+        command(); // 执行命令
+        commandStack.push( command ); // 将刚刚执行过的命令保存进栈
+    }
+};
+
+document.getElementById( 'replay' ).onclick = function() {// 点击播放录像
+    var command;
+    while( command = commandStack.shift() ){ // 从堆栈里面依次取出命令并执行
+        command();
+    }
+};
+```
+
+## 命令队列
+- 命令模式还有一个好处是，对象的生命周期几乎是永久的。除非我们主动去回收它。
+这样我们可以把命令对象放到一个队列中去执行。
+
+- 应用场景：
+    1. 订餐故事中如果人手不够，那么让这些订单进行排队处理再好不过了。
+    2. 之前小球运动的例子中，如果动画没有执行完再去执行下一个动画，那么上一个动画会骤然停止。那么把动画放入一个队列，当执行完一个动画再执行下一个动画就比较好了。
+
+## 宏命令
+- 宏命令是一组命令的集合。通过这种方式可以依次执行一批命令。
+- 例子：
+```javaScript
+var closeDoorCommand = {
+    execute: function(){
+        console.log( '关门' );
+    }
+};
+
+var openPcCommand = {
+    execute: function(){
+        console.log( '开电脑' );
+    }
+};
+
+var  openQQComand = {
+    execute: function(){
+        console.log( '登录QQ' );
+    }
+}
+
+var  MacroCommand = function(){
+    return {
+        commandsList: [],
+        add: function( command ) {
+            this.commandsList.push( command );
+        },
+        execute: function(){
+            for (var i = 0; i < this.commandsList.length; i++){
+                const command = this.commandsList[i];
+                command.execute();
+            }
+        }
+    }
+};
+
+var macroCommand = MacroCommand();
+macroCommand.add( closeDoorCommand );
+macroCommand.add( openPcCommand );
+macroCommand.add( openQQComand );
+
+macroCommand.execute();
+```
