@@ -22,3 +22,5 @@
 [发布-订阅模式](docs/chapter2/Observer.md)
 
 [命令模式](docs/chapter2/Command.md)
+
+[组合模式](docs/chapter2/Combination.md)

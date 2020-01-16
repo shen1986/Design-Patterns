@@ -27,7 +27,8 @@ module.exports = {
           'chapter2/Proxy',
           'chapter2/Iterator',
           'chapter2/Observer',
-          'chapter2/Command'
+          'chapter2/Command',
+          'chapter2/Combination'
         ]
       },
     //   {
