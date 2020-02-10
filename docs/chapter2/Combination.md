@@ -60,3 +60,96 @@ macroCommand.execute();
     + 利用对象的多态性表现，可以使客户端忽略组合对象和单个对象的不同。在组合模式中，客户将统一地使用组合结构中的所有对象，而不需要关心它究竟是组合对象还是单个对象。
 
 ## 请求在树中传递的过程
+- 如果子节点是叶对象，叶对象自身会处理这个请求，而如果子节点还是组合对象，请求会继续往下传递，叶对象下面不会再有其他的子节点，一个叶对象就是树的这条枝叶的尽头，组合对象下面可能还会有子节点。
+- 请求从上到下沿着树进行传递，直到树的尽头。作为客户，只需要关心树最顶层的组合对象，客户只需要请求这个组合对象，请求便会沿着树往下出阿迪，依次到达所有的叶对象。
+
+## 更强大的宏命令
+- 做一个"超级遥控器",有以下功能
+    + 打开空调
+    + 打开电视和音响
+    + 关门，开电脑，登录QQ
+
+```html
+<button id="button">按我</button>
+```
+
+```javaScript
+var MacroCommand = function(){
+    return {
+        commandsList:[],
+        add: function( command ){
+            this.commandsList.push( command );
+        },
+        execute: function(){
+            for (let i = 0; i < this.commandsList.length; i++) {
+                const command = this.commandsList[i];
+                command.execute();
+            }
+        }
+    }
+};
+
+var openAcCommand = {
+    execute: function(){
+        console.log( '打开空调' );
+    }
+};
+
+/******** 家里的电视和音响是连接在一起的,所以可以用一个宏命令来组合打开电视和打开音响的命令 ********/
+
+var openTvCommand = {
+    execute: function(){
+        console.log( '打开电视' );
+    }
+};
+
+var openSoundCommand = {
+    execute: function(){
+        console.log( '打开音响' );
+    }
+};
+
+var macroCommand1 = MacroCommand();
+macroCommand1.add( openTvCommand );
+macroCommand1.add( openSoundCommand );
+
+/********** 关门，打开电脑和打登录QQ的命令 *********/
+
+var closeDoorCommand = {
+    execute: function(){
+        console.log( '关门' );
+    }
+};
+
+var openPcCommand = {
+    execute: function(){
+        console.log( '开电脑' );
+    }
+};
+
+var openQQCommand = {
+    execute: function(){
+        console.log( '登录QQ' );
+    }
+};
+
+var macroCommand2 = MacroCommand()
+macroCommand2.add( closeDoorCommand );
+macroCommand2.add( openPcCommand );
+macroCommand2.add( openQQCommand );
+
+/**** 现在把命令组成一个超级命令 *****/
+var macroCommand = MacroCommand();
+macroCommand.add( openAcCommand );
+macroCommand.add( macroCommand1 );
+macroCommand.add( macroCommand2 );
+
+/***** 最后给遥控器绑定“超级命令” *****/
+var setCommand = (function( command ){
+    document.getElementById( 'button' ).onclick = function(){
+        command.execute();
+    }
+})( macroCommand );
+```
+
+## 抽象类在组合模式中的作用

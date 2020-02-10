@@ -70,4 +70,6 @@
 // 撤销与重做
 // require('./Command5');
 // 宏命令
-require('./Command6')
+// require('./Command6')
+// 更强大的宏命令
+require('./Combination1');
