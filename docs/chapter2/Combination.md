@@ -153,3 +153,40 @@ var setCommand = (function( command ){
 ```
 
 ## 抽象类在组合模式中的作用
+- 通过上面的例子，我们可以不用去例会是否是叶子节点，这种透明性使得只要调用execute就能完成我们要的结果，但是谁又能保证没有对象有execute这个方法呢，又或是写错名字了，在别的语言例如Java可以通过抽象类，来约束所有的子类都实装这一个方法，但是JavaScript中写这个特别的类就比较“怪异”。
+- JavaScript中的组合模式缺乏一定的严谨性，这是缺点，也是它的有点。
+
+## 透明性带来的安全问题
+- 组合对象可以拥有子节点，叶对象下面没有子节点，所以我们可能会发生一些误操作，比如视图往子节点中添加子节点。
+- 解决方案通常是给叶对象也增加add方法，并且在调用这个方法的时候，抛出一个异常来及时提醒客户。
+```javaScript
+var MacroCommand = function(){
+    return {
+        commandsList:[],
+        add: function( command ){
+            this.commandsList.push( command );
+        },
+        execute: function(){
+            for (let i = 0; i < this.commandsList.length; i++) {
+                const command = this.commandsList[i];
+                command.execute();
+            }
+        }
+    }
+};
+
+var openTvCommand = {
+    execute: function(){
+        console.log( '打开电视' );
+    },
+    add: function(){
+        throw new Error( '叶对象不能添加子节点' );
+    }
+};
+
+var macroCommand1 = MacroCommand();
+macroCommand1.add( openTvCommand );
+openTvCommand.add( macroCommand1 ); // Uncaught Error: 叶对象不能添加子节点
+```
+
+## 组合模式的例子--扫描文件夹

@@ -72,4 +72,6 @@
 // 宏命令
 // require('./Command6')
 // 更强大的宏命令
-require('./Combination1');
+// require('./Combination1');
+// 透明性带来的问题
+require('./Combination2');
