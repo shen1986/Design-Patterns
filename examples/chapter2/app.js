@@ -74,4 +74,6 @@
 // 更强大的宏命令
 // require('./Combination1');
 // 透明性带来的问题
-require('./Combination2');
+// require('./Combination2');
+// 扫描文件夹
+require('./Combination3');

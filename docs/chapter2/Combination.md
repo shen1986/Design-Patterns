@@ -190,3 +190,74 @@ openTvCommand.add( macroCommand1 ); // Uncaught Error: 叶对象不能添加子�
 ```
 
 ## 组合模式的例子--扫描文件夹
+- 文件夹和文件的关系非常适合用组合模式来实现
+- 有2层好处
+    + 组合模式让Ctrl+V，Ctrl+C成为了一个统一的操作
+    + 当我们杀毒扫描的时候不用关心里面有多少文件或文件夹，组合模式使得我们只要操作最外层的文件夹进行扫描
+
+```JavaScript
+/***** Folder *****/
+var Folder = function( name ){
+    this.name = name;
+    this.files = [];
+};
+
+Folder.prototype.add = function( file ){
+    this.files.push( file );
+};
+
+Folder.prototype.scan = function(){
+    console.log( '开始扫描文件夹：' + this.name );
+    for (let i = 0; i < this.files.length; i++) {
+        const file = this.files[i];
+        file.scan();
+    }
+};
+
+/******* File *******/
+var File = function( name ){;
+    this.name = name;
+};
+
+File.prototype.add = function(){
+    throw new Error( '文件下面不能再添加文件' );
+};
+
+File.prototype.scan = function(){
+    console.log( '开始扫描文件：', this.name );
+}
+
+var folder = new Folder( '学习资料' );
+var folder1 = new Folder( 'JavaScript' );
+var folder2 = new Folder( 'jQuery' );
+
+var file1 = new File( 'JavaScript设计模式与开发实践' );
+var file2 = new File( '精通jQuery' );
+var file3 = new File( '重构与模式' );
+
+folder1.add( file1 );
+folder2.add( file2 );
+
+folder.add( folder1 );
+folder.add( folder2 );
+folder.add( file3 );
+
+var folder3 = new Folder( 'Nodejs' );
+var file4 = new File( '深入浅出Nodejs' );
+folder3.add( file4 );
+
+var file5 = new File( 'JavaScript语言精髓与编程实践' );
+
+folder.add( folder1 );
+folder.add( file5 )
+
+folder.scan();
+```
+
+## 一些值得注意的地方
+1. 组合模式不是父子关系
+2. 对叶对象操作的一致性
+3. 双向映射关系
+4. 用职责链模式提高组合模式性能
+
+## 引用父对象
