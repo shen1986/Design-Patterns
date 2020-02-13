@@ -24,3 +24,5 @@
 [命令模式](docs/chapter2/Command.md)
 
 [组合模式](docs/chapter2/Combination.md)
+
+[模板方法模式](docs/chapter2/Template.md)

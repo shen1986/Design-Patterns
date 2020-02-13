@@ -76,4 +76,6 @@
 // 透明性带来的问题
 // require('./Combination2');
 // 扫描文件夹
-require('./Combination3');
+// require('./Combination3');
+// 引用树对象
+require('./Combination4');

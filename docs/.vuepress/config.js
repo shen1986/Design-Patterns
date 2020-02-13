@@ -28,7 +28,8 @@ module.exports = {
           'chapter2/Iterator',
           'chapter2/Observer',
           'chapter2/Command',
-          'chapter2/Combination'
+          'chapter2/Combination',
+          'chapter2/Template.md'
         ]
       },
     //   {
