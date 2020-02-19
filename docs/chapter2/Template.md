@@ -94,7 +94,7 @@
     
     - 抽象后整理为以下4步
     1. 把水煮沸
-    2. 用沸水冲泡咖啡
+    2. 用沸水冲泡饮料
     3. 把饮料倒进杯子
     4. 加调料
 
@@ -188,5 +188,141 @@
     - 缺点是我们不能保证子类一定重写了父类的抽象方法。
     - 解决这个缺点的2种方法。
         + 用鸭子类型来模拟接口检查。这回加上一些业务无关代码，还会带来一些不必要的复杂性
-        + 让抽象方法直接抛出一个异常，那样当我们虚心漏写具体实现，至少在运行时能够得到一个错误
-        
+        + 让抽象方法直接抛出一个异常，那样当我们粗心漏写具体实现，至少在运行时能够得到一个错误
+        ```javaScript
+        Beverage.prototype.brew = function() {
+            throw new Error( '子类必须重写brew方法' );
+        };
+
+        Beverage.prototype.pourInCup = function(){
+            throw new Error( '子类必须重写pourInCup方法' );
+        };
+
+        Beverage.prototype.addCondiments = function(){
+            throw new Error( '子类必须重写addCondiments方法' );
+        }
+        ```
+## 模板方法的使用场景
+- 比如Java中的HttpServlet技术
+- 一个基于HttpServlet的程序包含7个生命周期分别对应一个都方法。
+doGet
+doHead
+doPost
+doPut
+doDelete
+doOption
+doTrace
+
+## 钩子方法
+- 如果有一些个性的子类怎么办？比如我们在饮料类封装了饮料冲泡的顺序:
+    1. 把水煮沸
+    2. 用沸水冲泡饮料
+    3. 把饮料倒进杯子
+    4. 加调料
+- 这个顺序适用于绝大多数人，但是有些人和咖啡的时候是不加调料的（糖和牛奶），既然父类Beverage规定好了这4个步骤，有什么办法能让子类不受这个约束呢？
+- 钩子方法可以用来解决这个问题，用钩子是隔离变化的常用手段。我们在父类中容易变化的地方放置钩子，钩子可以有一个默认的实现，究竟要不要“挂钩”，这由子类自己决定
+```javaScript
+var Beverage = function(){};
+
+Beverage.prototype.boilWater = function(){
+    console.log( '把水煮沸' );
+};
+
+// 空方法应该由子类继承
+Beverage.prototype.brew = function(){};
+
+// 空方法应该由子类继承
+Beverage.prototype.pourInCup = function(){};
+
+// 空方法应该由子类继承
+Beverage.prototype.addCondiments= function(){};
+
+// 钩子方法
+Beverage.prototype.custmonerWantsCondiments = function(){
+    return true;
+};
+
+Beverage.prototype.init = function(){
+    this.boilWater();
+    this.brew();
+    this.pourInCup();
+    if ( this.custmonerWantsCondiments() ){ // 如果挂钩返回true，则需要调料
+        this.addCondiments();
+    }
+};
+
+var CoffeeWitWithHook = function(){};
+
+CoffeeWitWithHook.prototype = new Beverage();
+
+CoffeeWitWithHook.prototype.brew = function(){
+    console.log( '用沸水冲泡咖啡' );
+};
+
+CoffeeWitWithHook.prototype.pourInCup = function(){
+    console.log( '把咖啡倒进杯子' );
+};
+
+CoffeeWitWithHook.prototype.addCondiments = function(){
+    console.log( '加糖和牛奶' );
+};
+
+// 重写钩子方法
+CoffeeWitWithHook.prototype.custmonerWantsCondiments = function(){
+    return window.confirm( '请问需要咖啡吗？' );
+};
+
+var coffee = new CoffeeWitWithHook();
+coffee.init();
+```
+
+## 好莱坞原则
+- 不要来找我，我会给你打电话。
+
+## 真的需要“继承”吗
+```javaScript
+var Beverage = function( param ){
+
+    var boilWater = function(){
+        console.log( '把水煮沸' );
+    };
+
+    var brew = param.brew || function(){
+        throw new Error( '必须传递brew方法' );
+    };
+
+    var pourInCup = param.pourInCup || function(){
+        throw new Error( '必须传递pourInCup方法' );
+    };
+
+    var addCondiments = param.addCondiments || function(){
+        throw new Error( '必须传递addCondiments方法' );
+    };
+
+    var F = function(){};
+
+    F.prototype.init = function(){
+        boilWater();
+        brew();
+        pourInCup();
+        addCondiments();
+    };
+
+    return F;
+}
+
+var Coffee = Beverage({
+    brew: function(){
+        console.log( '用沸水冲泡咖啡' );
+    },
+    pourInCup: function(){
+        console.log( '把咖啡倒进杯子' );
+    },
+    addCondiments: function(){
+        console.log( '加糖和牛奶' );
+    }
+});
+
+var coffee = new Coffee();
+coffee.init();
+```
