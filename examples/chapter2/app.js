@@ -78,4 +78,6 @@
 // 扫描文件夹
 // require('./Combination3');
 // 引用树对象
-require('./Combination4');
+// require('./Combination4');
+// 文件对象爆炸
+require( './Flyweight3' );
