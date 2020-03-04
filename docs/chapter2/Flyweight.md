@@ -178,3 +178,40 @@ var UploadFactory = (function(){
     }
 })();
 ```
+
+### 管理封装的外部状态
+```javaScript
+var uploadManager = (function(){
+    var uploadDatabase = {};
+
+    return {
+        add: function( id, uploadType, fileName, fileSize ) {
+            var flyWeightObj = UploadFactory.create( uploadType );
+
+            var dom = document.createElement( 'div' );
+            dom.innerHTML = 
+                    '<span>文件名称:' + fileName + ', 文件大小:' + fileSize + '</span>' +
+                    '<button class="defFile">删除</button>';
+            
+            dom.querySelector( '.delFile' ).onclick = function() {
+                flyWeightObj.delFile( id );
+            }
+            document.body.appendChild( dom );
+
+            uploadDatabase[ id ] = {
+                fileName: fileName,
+                fileSize: fileSize,
+                dom: dom
+            };
+
+            return flyWeightObj;
+        },
+        setExternalState: function( id, flyWeightObj ) {
+            var uploadData = uploadDatabase[ id ];
+            for (var i in uploadData) {
+                flyWeightObj[ i ] = uploadData[ i ];
+            }
+        }
+    }
+})();
+```
